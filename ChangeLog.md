@@ -1,4 +1,5 @@
 ### 5.1.3 (TBD)
+- Add nullability annotations (#1699)
 
 - Added core support for HTJ2K-based transfer syntaxes (not actual codec) (#1687)
 
