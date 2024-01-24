@@ -26,6 +26,7 @@ namespace FellowOakDicom
         private DicomTransferSyntax _syntax;
         private Encoding[] _fallbackEncodings = DicomEncoding.DefaultArray;
 
+        public long DatasetStartOffset { get; set; }
         #endregion
 
         #region CONSTRUCTORS

@@ -42,7 +42,7 @@ namespace FellowOakDicom.IO.Reader
             _sequences = new Stack<DicomSequence>();
         }
 
-        public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data)
+        public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data, long offset)
         {
             DicomElement element = vr.Code switch
             {
@@ -94,9 +94,12 @@ namespace FellowOakDicom.IO.Reader
 
             DicomDataset ds = _datasets.Peek();
             ds.AddOrUpdate(element);
+
+            if (ds.DatasetStartOffset == 0)
+                ds.DatasetStartOffset = offset;
         }
 
-        public void OnBeginSequence(IByteSource source, DicomTag tag, uint length)
+        public void OnBeginSequence(IByteSource source, DicomTag tag, uint length, long offset)
         {
             var sq = new DicomSequence(tag);
             _sequences.Push(sq);
@@ -131,7 +134,7 @@ namespace FellowOakDicom.IO.Reader
 
         public void OnEndSequence() => _sequences.Pop();
 
-        public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr)
+        public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr, long offset)
         {
             if (vr == DicomVR.OB)
             {
@@ -170,6 +173,5 @@ namespace FellowOakDicom.IO.Reader
             }
             _fragment = null;
         }
-
     }
 }

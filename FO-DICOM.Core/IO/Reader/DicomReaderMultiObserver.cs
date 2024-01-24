@@ -17,11 +17,11 @@ namespace FellowOakDicom.IO.Reader
             _observers = observers;
         }
 
-        public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data)
-            => _observers.Each(observer => observer.OnElement(source, tag, vr, data));
+        public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data, long offset)
+            => _observers.Each(observer => observer.OnElement(source, tag, vr, data, offset));
 
-        public void OnBeginSequence(IByteSource source, DicomTag tag, uint length)
-            => _observers.Each(observer => observer.OnBeginSequence(source, tag, length));
+        public void OnBeginSequence(IByteSource source, DicomTag tag, uint length, long offset)
+            => _observers.Each(observer => observer.OnBeginSequence(source, tag, length, offset));
 
         public void OnBeginSequenceItem(IByteSource source, uint length)
             => _observers.Each(observer => observer.OnBeginSequenceItem(source, length));
@@ -32,14 +32,13 @@ namespace FellowOakDicom.IO.Reader
         public void OnEndSequence()
             => _observers.Each(observer => observer.OnEndSequence());
 
-        public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr)
-            => _observers.Each(observer => observer.OnBeginFragmentSequence(source, tag, vr));
+        public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr, long offset)
+            => _observers.Each(observer => observer.OnBeginFragmentSequence(source, tag, vr, offset));
 
         public void OnFragmentSequenceItem(IByteSource source, IByteBuffer data)
             => _observers.Each(observer => observer.OnFragmentSequenceItem(source, data));
 
         public void OnEndFragmentSequence()
             => _observers.Each(observer => observer.OnEndFragmentSequence());
-
     }
 }

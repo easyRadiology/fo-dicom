@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using FellowOakDicom.IO.Buffer;
 
 namespace FellowOakDicom.IO.Reader
@@ -27,17 +28,17 @@ namespace FellowOakDicom.IO.Reader
             _callbacks.Add(tag, callback);
         }
 
-        public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data)
+        public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data, long offset)
         {
             if (_callbacks.TryGetValue(tag, out EventHandler<DicomReaderEventArgs> handler))
             {
-                handler(this, new DicomReaderEventArgs(source.Marker, tag, vr, data));
+                handler(this, new DicomReaderEventArgs(source.Marker, tag, vr, data, offset));
             }
         }
 
-        public void OnBeginSequence(IByteSource source, DicomTag tag, uint length)
+        public void OnBeginSequence(IByteSource source, DicomTag tag, uint length, long offset)
         {
-            _stack.Push(new DicomReaderEventArgs(source.Marker, tag, DicomVR.SQ, null));
+            _stack.Push(new DicomReaderEventArgs(source.Marker, tag, DicomVR.SQ, null, offset));
         }
 
         public void OnBeginSequenceItem(IByteSource source, uint length)
@@ -57,9 +58,9 @@ namespace FellowOakDicom.IO.Reader
             }
         }
 
-        public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr)
+        public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr, long offset)
         {
-            _stack.Push(new DicomReaderEventArgs(source.Marker, tag, vr, null));
+            _stack.Push(new DicomReaderEventArgs(source.Marker, tag, vr, null, offset));
         }
 
         public void OnFragmentSequenceItem(IByteSource source, IByteBuffer data)

@@ -19,12 +19,15 @@ namespace FellowOakDicom.IO.Reader
 
         public readonly IByteBuffer Data;
 
-        public DicomReaderEventArgs(long position, DicomTag tag, DicomVR vr, IByteBuffer data)
+        public readonly long Offset;
+
+        public DicomReaderEventArgs(long position, DicomTag tag, DicomVR vr, IByteBuffer data, long offset)
         {
             Position = position;
             Tag = tag;
             VR = vr;
             Data = data;
+            Offset = offset;
         }
     }
 }

@@ -6,6 +6,7 @@ using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
 using FellowOakDicom.IO.Reader;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace FellowOakDicom.Log
 {
@@ -26,7 +27,7 @@ namespace FellowOakDicom.Log
             _pad = string.Empty;
         }
 
-        public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data) =>
+        public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data, long offset) =>
             _log.Log(
                 _level,
                 "{Marker:x8}: {Padding}{Tag} {VrCode} {TagDictionaryEntryName} [{Size}]",
@@ -37,7 +38,7 @@ namespace FellowOakDicom.Log
                 tag.DictionaryEntry.Name,
                 data.Size);
 
-        public void OnBeginSequence(IByteSource source, DicomTag tag, uint length)
+        public void OnBeginSequence(IByteSource source, DicomTag tag, uint length, long offset)
         {
             _log.Log(
                 _level,
@@ -60,7 +61,7 @@ namespace FellowOakDicom.Log
 
         public void OnEndSequence() => DecreaseDepth();
 
-        public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr)
+        public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr, long offset)
         {
             _log.Log(
                 _level,

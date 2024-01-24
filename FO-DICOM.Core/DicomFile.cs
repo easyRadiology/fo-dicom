@@ -36,6 +36,10 @@ namespace FellowOakDicom
         /// </summary>
         public int SequenceDepth { get; set; }
 
+        /// <summary>
+        /// Gets or sets the start offset of the current tag
+        /// </summary>
+        public long StartOffset { get; set; }
         #endregion
     }
 

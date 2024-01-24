@@ -10,9 +10,9 @@ namespace FellowOakDicom.IO.Reader
     internal interface IDicomReaderObserver
     {
 
-        void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data);
+        void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data, long offset);
 
-        void OnBeginSequence(IByteSource source, DicomTag tag, uint length);
+        void OnBeginSequence(IByteSource source, DicomTag tag, uint length, long offset);
 
         void OnBeginSequenceItem(IByteSource source, uint length);
 
@@ -20,7 +20,7 @@ namespace FellowOakDicom.IO.Reader
 
         void OnEndSequence();
 
-        void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr);
+        void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr, long offset);
 
         void OnFragmentSequenceItem(IByteSource source, IByteBuffer data);
 

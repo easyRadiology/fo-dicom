@@ -129,6 +129,8 @@ namespace FellowOakDicom.IO.Reader
 
             private int _sequenceDepth;
 
+            private long _elementStartOffset = 0;
+
             private ParseStage _parseStage;
 
             private DicomTag _tag;
@@ -336,6 +338,7 @@ namespace FellowOakDicom.IO.Reader
                         return false;
                     }
 
+                    _elementStartOffset = source.Position;
                     var group = source.GetUInt16();
                     var element = source.GetUInt16();
                     DicomPrivateCreator creator = null;
@@ -367,8 +370,14 @@ namespace FellowOakDicom.IO.Reader
                         _tag = _entry.Tag; // Use dictionary tag
                     }
 
+                    /*f (_datasetStartOffset == 0 && group >= 0x8)
+                    {
+                        _datasetStartOffset = _elementStartOffset;
+                        _observer.OnDatasetStartReached(_datasetStartOffset);
+                    }*/
+
                     if (_stop != null 
-                        && _stop(new ParseState { PreviousTag = _previousTag, Tag = _tag, SequenceDepth = _sequenceDepth }))
+                        && _stop(new ParseState { PreviousTag = _previousTag, Tag = _tag, SequenceDepth = _sequenceDepth, StartOffset = _elementStartOffset }))
                     {
                         _result = DicomReaderResult.Stopped;
                         return false;
@@ -641,7 +650,7 @@ namespace FellowOakDicom.IO.Reader
                     if (_vr == DicomVR.SQ)
                     {
                         // start of sequence
-                        _observer.OnBeginSequence(source, _tag, _length);
+                        _observer.OnBeginSequence(source, _tag, _length, _elementStartOffset);
                         _parseStage = ParseStage.Tag;
                         if (_length == 0)
                         {
@@ -691,7 +700,7 @@ namespace FellowOakDicom.IO.Reader
 
                     if (_length == _undefinedLength)
                     {
-                        _observer.OnBeginFragmentSequence(source, _tag, _vr);
+                        _observer.OnBeginFragmentSequence(source, _tag, _vr, _elementStartOffset);
                         _parseStage = ParseStage.Tag;
                         ParseFragmentSequence(source);
                         return true;
@@ -711,7 +720,7 @@ namespace FellowOakDicom.IO.Reader
                         {
                             buffer = EndianByteBuffer.Create(buffer, source.Endian, _vr.UnitSize);
                         }
-                        _observer.OnElement(source, _tag, _vr, buffer);
+                        _observer.OnElement(source, _tag, _vr, buffer, _elementStartOffset);
                     }
 
                     // parse private creator value and add to lookup table
@@ -797,7 +806,7 @@ namespace FellowOakDicom.IO.Reader
                     if (_vr == DicomVR.SQ)
                     {
                         // start of sequence
-                        _observer.OnBeginSequence(source, _tag, _length);
+                        _observer.OnBeginSequence(source, _tag, _length, _elementStartOffset);
                         _parseStage = ParseStage.Tag;
                         if (_length == 0)
                         {
@@ -847,7 +856,7 @@ namespace FellowOakDicom.IO.Reader
 
                     if (_length == _undefinedLength)
                     {
-                        _observer.OnBeginFragmentSequence(source, _tag, _vr);
+                        _observer.OnBeginFragmentSequence(source, _tag, _vr, _elementStartOffset);
                         _parseStage = ParseStage.Tag;
                         await ParseFragmentSequenceAsync(source).ConfigureAwait(false);
                         return true;
@@ -865,7 +874,7 @@ namespace FellowOakDicom.IO.Reader
                     {
                         buffer = EndianByteBuffer.Create(buffer, source.Endian, _vr.UnitSize);
                     }
-                    _observer.OnElement(source, _tag, _vr, buffer);
+                    _observer.OnElement(source, _tag, _vr, buffer, _elementStartOffset);
 
                     // parse private creator value and add to lookup table
                     // according to
