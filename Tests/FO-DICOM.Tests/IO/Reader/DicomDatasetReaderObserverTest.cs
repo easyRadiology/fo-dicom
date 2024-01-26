@@ -26,7 +26,7 @@ namespace FellowOakDicom.Tests.IO.Reader
             var observer = new DicomDatasetReaderObserver(dataset);
             var buffer = new MemoryByteBuffer(Encoding.ASCII.GetBytes(data));
 
-            observer.OnElement(null, tag, vr, buffer);
+            observer.OnElement(null, tag, vr, buffer, 0);
             Assert.IsType(expected, dataset.First());
         }
 

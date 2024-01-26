@@ -189,14 +189,14 @@ namespace FellowOakDicom.Tests.IO.Reader
 
             #region Interface implementation
 
-            public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data)
+            public void OnElement(IByteSource source, DicomTag tag, DicomVR vr, IByteBuffer data, long offset)
             {
                 Tag = tag;
                 VR = vr;
                 Data = Encoding.UTF8.GetString(data.Data);
             }
 
-            public void OnBeginSequence(IByteSource source, DicomTag tag, uint length)
+            public void OnBeginSequence(IByteSource source, DicomTag tag, uint length, long offset)
             {
             }
 
@@ -212,7 +212,7 @@ namespace FellowOakDicom.Tests.IO.Reader
             {
             }
 
-            public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr)
+            public void OnBeginFragmentSequence(IByteSource source, DicomTag tag, DicomVR vr, long offset)
             {
             }
 

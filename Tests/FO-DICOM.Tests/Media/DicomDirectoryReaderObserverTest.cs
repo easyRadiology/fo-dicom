@@ -33,7 +33,7 @@ namespace FellowOakDicom.Tests.Media
 
             var byteSource = new TestByteSource();
             var observer = new DicomDirectoryReaderObserver(root.Sequence);
-            observer.OnBeginSequence(byteSource, DicomTag.DirectoryRecordSequence, 0);
+            observer.OnBeginSequence(byteSource, DicomTag.DirectoryRecordSequence, 0, 0);
             foreach (var container in allChildren)
             {
                 sequence.Items.Add(container.Sequence);
@@ -69,7 +69,7 @@ namespace FellowOakDicom.Tests.Media
 
             var byteSource = new TestByteSource();
             var observer = new DicomDirectoryReaderObserver(root.Sequence);
-            observer.OnBeginSequence(byteSource, DicomTag.DirectoryRecordSequence, 0);
+            observer.OnBeginSequence(byteSource, DicomTag.DirectoryRecordSequence, 0, 0);
             uint lastPosition = 0;
             foreach (var container in allChildren)
             {
@@ -111,7 +111,7 @@ namespace FellowOakDicom.Tests.Media
 
             var byteSource = new TestByteSource();
             var observer = new DicomDirectoryReaderObserver(root.Sequence);
-            observer.OnBeginSequence(byteSource, DicomTag.DirectoryRecordSequence, 0);
+            observer.OnBeginSequence(byteSource, DicomTag.DirectoryRecordSequence, 0, 0);
             foreach (var container in allChildren)
             {
                 sequence.Items.Add(container.Sequence);
